@@ -1,0 +1,375 @@
+<%- include("./partials/header") %>
+
+<style>
+  .register-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .register-card {
+    width: 100%;
+    max-width: 480px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .register-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 40px 30px;
+    text-align: center;
+    color: white;
+  }
+
+  .register-header h3 {
+    margin: 0 0 10px 0;
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  .register-header p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 15px;
+  }
+
+  .register-body {
+    padding: 40px 35px;
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: #344055;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+
+  .form-control {
+    border: 2px solid #e1e8ed;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+  }
+
+  .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .form-control.is-valid {
+    border-color: #10b981;
+  }
+
+  .form-control.is-invalid {
+    border-color: #ef4444;
+  }
+
+  .btn-register {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  }
+
+  .btn-register:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  }
+
+  .password-strength-meter {
+    height: 4px;
+    background: #e1e8ed;
+    border-radius: 2px;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+
+  .password-strength-bar {
+    height: 100%;
+    width: 0%;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+  }
+
+  .strength-weak { 
+    width: 33%; 
+    background: #ef4444; 
+  }
+
+  .strength-medium { 
+    width: 66%; 
+    background: #f59e0b; 
+  }
+
+  .strength-strong { 
+    width: 100%; 
+    background: #10b981; 
+  }
+
+  .password-strength-text {
+    font-size: 12px;
+    margin-top: 5px;
+    font-weight: 500;
+  }
+
+  .text-weak { color: #ef4444; }
+  .text-medium { color: #f59e0b; }
+  .text-strong { color: #10b981; }
+
+  .login-link {
+    text-align: center;
+    margin-top: 25px;
+    color: #5a6c7d;
+  }
+
+  .login-link a {
+    color: #667eea;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .login-link a:hover {
+    color: #764ba2;
+    text-decoration: underline;
+  }
+
+  .emoji {
+    font-size: 32px;
+    margin-bottom: 10px;
+    display: inline-block;
+    animation: sparkle 2s ease infinite;
+  }
+
+  @keyframes sparkle {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  .input-icon {
+    position: relative;
+  }
+
+  .input-icon i {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #10b981;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .input-icon .is-valid ~ i {
+    opacity: 1;
+  }
+
+  .requirements {
+    font-size: 12px;
+    color: #8492a6;
+    margin-top: 8px;
+    line-height: 1.6;
+  }
+
+  .requirements ul {
+    margin: 5px 0 0 0;
+    padding-left: 20px;
+  }
+
+  .requirements li {
+    margin: 2px 0;
+  }
+</style>
+
+<div class="register-container">
+  <div class="register-card">
+    <div class="register-header">
+      <div class="emoji">✨</div>
+      <h3>Create an Account</h3>
+      <p>Join us & start your shopping journey</p>
+    </div>
+
+    <div class="register-body">
+      <form action="/users/register" method="POST" id="registerForm">
+        <div class="mb-3">
+          <label class="form-label">Full Name</label>
+          <div class="input-icon">
+            <input 
+              type="text" 
+              class="form-control" 
+              name="name" 
+              id="name"
+              placeholder="Enter your full name" 
+              required
+              minlength="2"
+              autocomplete="name"
+            >
+            <i class="fas fa-check-circle"></i>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email Address</label>
+          <div class="input-icon">
+            <input 
+              type="email" 
+              class="form-control" 
+              name="email" 
+              id="email"
+              placeholder="Enter your email" 
+              required
+              autocomplete="email"
+            >
+            <i class="fas fa-check-circle"></i>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <div class="input-icon">
+            <input 
+              type="password" 
+              class="form-control" 
+              name="password" 
+              id="password"
+              placeholder="Create a strong password" 
+              required
+              minlength="8"
+              autocomplete="new-password"
+            >
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div class="password-strength-meter">
+            <div class="password-strength-bar" id="strengthBar"></div>
+          </div>
+          <div class="password-strength-text" id="strengthText"></div>
+          <div class="requirements">
+            <small>Password must contain at least 8 characters</small>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="terms" required>
+            <label class="form-check-label" for="terms" style="font-size: 14px; color: #5a6c7d;">
+              I agree to the <a href="/terms" style="color: #667eea; text-decoration: none;">Terms & Conditions</a>
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-register w-100">Create Account</button>
+
+        <div class="login-link">
+          Already have an account? 
+          <a href="/users/login">Login here</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Password strength checker
+  const passwordInput = document.getElementById('password');
+  const strengthBar = document.getElementById('strengthBar');
+  const strengthText = document.getElementById('strengthText');
+
+  passwordInput.addEventListener('input', function() {
+    const password = this.value;
+    const strength = calculatePasswordStrength(password);
+    
+    // Remove all strength classes
+    strengthBar.className = 'password-strength-bar';
+    strengthText.className = 'password-strength-text';
+    
+    if (password.length === 0) {
+      strengthText.textContent = '';
+      return;
+    }
+    
+    if (strength < 3) {
+      strengthBar.classList.add('strength-weak');
+      strengthText.classList.add('text-weak');
+      strengthText.textContent = '⚠️ Weak password';
+    } else if (strength < 5) {
+      strengthBar.classList.add('strength-medium');
+      strengthText.classList.add('text-medium');
+      strengthText.textContent = '⚡ Medium strength';
+    } else {
+      strengthBar.classList.add('strength-strong');
+      strengthText.classList.add('text-strong');
+      strengthText.textContent = '✓ Strong password';
+      passwordInput.classList.add('is-valid');
+    }
+  });
+
+  function calculatePasswordStrength(password) {
+    let strength = 0;
+    
+    if (password.length >= 8) strength++;
+    if (password.length >= 12) strength++;
+    if (/[a-z]/.test(password)) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^a-zA-Z0-9]/.test(password)) strength++;
+    
+    return strength;
+  }
+
+  // Real-time validation for name
+  const nameInput = document.getElementById('name');
+  nameInput.addEventListener('input', function() {
+    if (this.value.length >= 2) {
+      this.classList.add('is-valid');
+      this.classList.remove('is-invalid');
+    } else {
+      this.classList.remove('is-valid');
+      if (this.value.length > 0) {
+        this.classList.add('is-invalid');
+      }
+    }
+  });
+
+  // Real-time validation for email
+  const emailInput = document.getElementById('email');
+  emailInput.addEventListener('input', function() {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailPattern.test(this.value)) {
+      this.classList.add('is-valid');
+      this.classList.remove('is-invalid');
+    } else {
+      this.classList.remove('is-valid');
+      if (this.value.length > 0) {
+        this.classList.add('is-invalid');
+      }
+    }
+  });
+</script>
+
+<%- include("./partials/footer") %>

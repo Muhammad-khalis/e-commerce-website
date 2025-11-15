@@ -1,0 +1,188 @@
+<%- include('./partials/header') %>
+
+<% if (success && success.length > 0) { %>
+  <div class="fixed top-5 left-1/2 -translate-x-1/2 z-50 space-y-2">
+    <% success.forEach(msg => { %>
+      <div class="inline-flex items-center gap-3 rounded-lg bg-emerald-500/90 px-4 py-2 text-sm text-white shadow-lg ring-1 ring-emerald-400/60 animate-slide-down">
+        <span class="inline-block"><%= msg %></span>
+        <button type="button" class="text-xs/none opacity-80 hover:opacity-100 transition">
+          ×
+        </button>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
+<div class="min-h-screen bg-slate-50">
+  <div class="container mx-auto flex min-h-screen gap-8 px-4 py-10 lg:px-10">
+    <!-- Sidebar -->
+    <aside class="hidden w-64 flex-shrink-0 border-r border-slate-200 bg-white/80 px-4 py-6 shadow-sm lg:flex lg:flex-col">
+      <h1 class="mb-6 text-xl font-semibold tracking-tight text-slate-800">
+        Admin Dashboard
+      </h1>
+
+      <nav class="space-y-1 text-sm">
+        <a href="/products"
+           class="flex items-center rounded-md px-3 py-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition">
+          All Products
+        </a>
+        <a href="/products/create"
+           class="flex items-center rounded-md bg-blue-600 px-3 py-2 text-white shadow-sm hover:bg-blue-700 transition">
+          + Create New Product
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1">
+      <div class="mb-6 flex items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-semibold tracking-tight text-slate-900">
+            Create New Product
+          </h2>
+          <p class="mt-1 text-sm text-slate-500">
+            Upload an image, set pricing, and save it to your catalog.
+          </p>
+        </div>
+
+        <a href="/products"
+           class="hidden rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition md:inline-flex">
+          Back to list
+        </a>
+      </div>
+
+      <section
+        class="rounded-xl border border-slate-200 bg-white/90 p-6 shadow-sm backdrop-blur-sm md:p-8">
+        <form autocomplete="off"
+              action="/products/create"
+              method="post"
+              enctype="multipart/form-data"
+              class="space-y-8">
+          <!-- Product Details -->
+          <div>
+            <h3 class="text-lg font-medium text-slate-900">
+              Product details
+            </h3>
+            <p class="mt-1 text-xs text-slate-500">
+              Basic information about your product.
+            </p>
+
+            <div class="mt-6 grid gap-6 md:grid-cols-[260px,1fr]">
+              <!-- Image upload -->
+              <div>
+                <label class="block text-sm font-medium text-slate-700 mb-2">
+                  Product image
+                </label>
+
+                <div
+                  class="group relative flex cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50/60 px-4 py-6 text-center hover:border-blue-400 hover:bg-blue-50/60 transition">
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                       viewBox="0 0 20 20"
+                       fill="currentColor"
+                       class="mb-2 h-8 w-8 text-slate-400 group-hover:text-blue-500">
+                    <path
+                      d="M4 3a2 2 0 0 0-2 2v7.5A2.5 2.5 0 0 0 4.5 15H7l1.293 1.293A1 1 0 0 0 9 16h2a1 1 0 0 0 .707-.293L13 15h2.5A2.5 2.5 0 0 0 18 12.5V5a2 2 0 0 0-2-2H4Z" />
+                  </svg>
+                  <p class="text-xs font-medium text-slate-700">
+                    Click to upload
+                    <span class="font-normal text-slate-500">
+                      or drag and drop
+                    </span>
+                  </p>
+                  <p class="mt-1 text-[11px] text-slate-400">
+                    PNG, JPG up to 5MB
+                  </p>
+                  <input
+                    name="image"
+                    type="file"
+                    class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                    accept="image/*">
+                </div>
+              </div>
+
+              <!-- Text fields -->
+              <div class="grid gap-4 md:grid-cols-2">
+                <div class="md:col-span-2">
+                  <label for="name" class="mb-1 block text-sm font-medium text-slate-700">
+                    Product name
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    placeholder="e.g. Wireless Headphones Pro"
+                    required
+                    class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                </div>
+
+                <div>
+                  <label for="price" class="mb-1 block text-sm font-medium text-slate-700">
+                    Price
+                  </label>
+                  <div class="relative">
+                    <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-xs text-slate-400">
+                      PKR
+                    </span>
+                    <input
+                      id="price"
+                      name="price"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder="4999"
+                      required
+                      class="block w-full rounded-md border border-slate-300 bg-white pl-11 pr-3 py-2 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                  </div>
+                  <p class="mt-1 text-[11px] text-slate-400">
+                    Base selling price.
+                  </p>
+                </div>
+
+                <div>
+                  <label for="discount" class="mb-1 block text-sm font-medium text-slate-700">
+                    Discount price
+                    <span class="text-[11px] font-normal text-slate-400">
+                      (optional)
+                    </span>
+                  </label>
+                  <div class="relative">
+                    <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-xs text-slate-400">
+                      PKR
+                    </span>
+                    <input
+                      id="discount"
+                      name="discount"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder="3999"
+                      class="block w-full rounded-md border border-slate-300 bg-white pl-11 pr-3 py-2 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                  </div>
+                  <p class="mt-1 text-[11px] text-slate-400">
+                    Leave empty if no discount.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex flex-col-reverse items-stretch justify-end gap-3 border-t border-slate-200 pt-4 sm:flex-row">
+            <a href="/products"
+               class="inline-flex items-center justify-center rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition">
+              Cancel
+            </a>
+
+            <button
+              type="submit"
+              class="inline-flex items-center justify-center rounded-md bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white transition disabled:cursor-not-allowed disabled:bg-blue-300">
+              Create product
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+</div>
+
+<%- include('./partials/footer') %>

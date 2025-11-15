@@ -1,0 +1,67 @@
+<%- include('./partials/header') %>
+
+<!-- Flash Message -->
+<% if (success && success.length > 0) { %>
+  <div class="fixed top-5 left-1/2 -translate-x-1/2 z-50">
+    <div class="inline-flex items-center gap-3 rounded-lg bg-emerald-500/90 px-4 py-2 text-sm text-white shadow-lg ring-1 ring-emerald-400/60">
+      <span><%= success %></span>
+      <button type="button" class="text-xs/none opacity-80 hover:opacity-100 transition" onclick="this.parentElement.parentElement.remove()">
+        ×
+      </button>
+    </div>
+  </div>
+<% } %>
+
+<div class="w-full h-screen flex items-start px-20 py-20 gap-10">
+    <!-- Sidebar -->
+    <div class="w-[25%] flex h-screen flex-col items-start gap-4">
+        <a class="block w-fit mb-2 text-blue-600 hover:underline" href="/products/admin">All Products</a>
+        <a class="block w-fit mb-2 text-green-600 hover:underline" href="/products/create">Create New Product</a>
+        <form action="/products/delete-all" method="POST">
+            <button type="submit" class="text-red-500 hover:underline mt-2">Delete All</button>
+        </form>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="w-[75%] flex flex-col gap-5 h-screen overflow-y-auto">
+        <% if (products && products.length > 0) { %>
+            <div class="flex flex-wrap items-start gap-5">
+                <% products.forEach(function(product){ %>
+                    <div class="w-60 border rounded shadow-sm overflow-hidden">
+                        <!-- Product Image -->
+                        <div class="w-full h-52 flex items-center justify-center bg-gray-100">
+                            <% if(product.image){ %>
+                                <img src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" class="h-full object-contain" />
+                            <% } else { %>
+                                <div class="text-xs text-gray-500">No Image</div>
+                            <% } %>
+                        </div>
+
+                        <!-- Product Info -->
+                        <div class="flex justify-between items-center px-4 py-4 bg-gray-50">
+                            <div>
+                                <h3 class="font-medium text-lg"><%= product.name %></h3>
+                                <h4>₹ <%= product.price %></h4>
+                            </div>
+
+                            <!-- Delete Button -->
+                            <form action="/products/delete/<%= product._id %>" method="POST">
+                                <button type="submit" class="w-7 h-7 flex items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600">
+                                    <i class="ri-delete-bin-line"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <div class="flex h-64 flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50/60">
+                <p class="text-sm font-medium text-gray-700">
+                    No products available
+                </p>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<%- include('./partials/footer') %>

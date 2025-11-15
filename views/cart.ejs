@@ -1,0 +1,47 @@
+<%- include('./partials/header') %>
+
+<div class="w-full min-h-screen flex flex-col items-center px-20 py-20 gap-10">
+
+    <h1 class="text-2xl font-semibold mb-5">Your Cart</h1>
+
+    <% if(cart.length === 0) { %>
+        <div class="text-center text-gray-500">
+            Your cart is empty.
+        </div>
+    <% } else { %>
+        <div class="w-full max-w-4xl flex flex-col gap-5">
+
+            <% cart.forEach(item => { %>
+                <div class="flex justify-between items-center p-4 border rounded-md bg-white shadow-sm">
+                    <div class="flex flex-col">
+                        <h3 class="font-medium text-lg"><%= item.name %></h3>
+                        <p class="text-gray-600">Price: ₹ <%= item.price %></p>
+                    </div>
+
+                    <form action="/cart/update/<%= item.id %>" method="POST" class="flex items-center gap-2">
+                        <button type="submit" name="action" value="decrease" class="px-3 py-1 bg-gray-200 rounded">-</button>
+                        <div class="px-3 py-1 border rounded"><%= item.qty %></div>
+                        <button type="submit" name="action" value="increase" class="px-3 py-1 bg-gray-200 rounded">+</button>
+                        <button type="submit" name="action" value="remove" class="px-3 py-1 bg-red-500 text-white rounded ml-2">Remove</button>
+                    </form>
+
+                    <div class="text-lg font-semibold">
+                        ₹ <%= item.price * item.qty %>
+                    </div>
+                </div>
+            <% }) %>
+
+            <div class="flex justify-end mt-5">
+                <h2 class="text-xl font-semibold">Total: ₹ <%= total %></h2>
+            </div>
+
+            <div class="flex justify-end mt-3">
+                <a href="/checkout" class="px-5 py-2 bg-green-600 text-white rounded hover:bg-green-700">Checkout</a>
+            </div>
+
+        </div>
+    <% } %>
+
+</div>
+
+<%- include('./partials/footer') %>
